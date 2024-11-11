@@ -1,0 +1,53 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]  # Déclenche la pipeline pour chaque push sur main
+  pull_request:
+    branches: [main]  # Déclenche la pipeline pour les pull requests vers main
+  workflow_dispatch:  # Permet de déclencher le workflow manuellement
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]  # Choisissez les versions de Node.js à tester
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test  # Commande pour exécuter les tests
+
+      - name: Build package
+        run: npm run build  # Commande pour construire le package
+
+  publish:
+    needs: build  # Ce job dépend du job `build` et ne s'exécutera qu'après sa réussite
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'  # Exécute uniquement si déclenché manuellement
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16  # Vous pouvez spécifier une version spécifique pour la publication
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
