@@ -1,15 +1,16 @@
 {
   "name": "ts-firebase-mock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/loneObserver1/ts-mock-firebase"
+    "url": "git+https://github.com/loneObserver1/ts-mock-firebase.git"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "test": "npx jest"
+    "test": "npx jest",
+    "publish": "npm publish"
   },
   "keywords": [],
   "author": "",
