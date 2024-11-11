@@ -1,5 +1,7 @@
 # ts-mock-firebase
 
+[![Node.js CI](https://github.com/loneObserver1/ts-mock-firebase/actions/workflows/nodejs.yml/badge.svg)](https://github.com/loneObserver1/ts-mock-firebase/actions/workflows/nodejs.yml)
+
 `ts-mock-firebase` is a TypeScript library designed to simulate Firestore (a NoSQL cloud database from Firebase) for testing purposes. This package mimics Firestore's core functionality, allowing developers to write unit tests without requiring a real Firestore instance. It operates entirely in-memory, providing a lightweight solution for testing Firestore interactions locally.
 
 ## Table of Contents
