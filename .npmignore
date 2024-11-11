@@ -1,0 +1,6 @@
+src/
+tsconfig.json
+tsconfig.buildinfo
+node_modules/
+tests/
+*.log
