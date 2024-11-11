@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14, 16, 18]  # Choisissez les versions de Node.js à tester
+        node-version: [18, 22, 22]  # Choisissez les versions de Node.js à tester
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
