@@ -89,4 +89,11 @@ export default class MockedDocumentReference {
         const doc = this._collection.documents.get(this._id);
         return doc ? doc.exists() : false;
     }
+
+    collection(name: string): MockedCollection {
+        if (!this.subcollections.has(name)) {
+            this.subcollections.set(name, new MockedCollection(name));
+        }
+        return this.subcollections.get(name)!;
+    }
 }

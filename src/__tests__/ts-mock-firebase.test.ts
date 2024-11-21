@@ -150,4 +150,53 @@ describe('Firestore Mock Tests', () => {
         expect(limitedUsers[0].data()!.name).toBe('Alice');
         expect(limitedUsers[1].data()!.name).toBe('Bob');
     });
+
+    it('should allow creating a document with subcollections', () => {
+        const col = firestore.collection('users');
+        const docRef = col.doc('user1');
+
+        // Create subcollection "addresses" within the document
+        const addresses = docRef.collection('addresses').doc('address1');
+        addresses.set({ city: 'Paris', zip: '75000' });
+
+        const addressDoc = docRef.collection('addresses').doc('address1');
+        const snapshot = addressDoc.get();
+
+        expect(snapshot.data()!.city).toBe('Paris');
+        expect(snapshot.data()!.zip).toBe('75000');
+    });
+
+    it('should correctly return subcollection in nested document reference', () => {
+        const col = firestore.collection('users');
+        const docRef = col.doc('user1');
+
+        // Add a subcollection to this document
+        const addresses = docRef.collection('addresses').doc('address1');
+        addresses.set({ city: 'Paris', zip: '75000' });
+
+        const subcollectionRef = docRef.collection('addresses');
+        expect(subcollectionRef).toBeDefined();
+
+        const snapshot = subcollectionRef.doc('address1').get();
+        expect(snapshot.data()!.city).toBe('Paris');
+    });
+
+    it('should allow multiple nested subcollections', () => {
+        const usersCollection = firestore.collection('users');
+        const userDoc = usersCollection.doc('user1');
+
+        // First level subcollection
+        const addressesCollection = userDoc.collection('addresses');
+        addressesCollection.add({ city: 'Paris', zip: '75000' });
+
+        // Second level subcollection under addresses
+        const reviewsCollection = addressesCollection.doc('address1').collection('reviews');
+        reviewsCollection.add({ review: 'Great place!', rating: 5 });
+
+        const reviewSnapshot = reviewsCollection.get();
+
+        expect(reviewSnapshot.length).toBe(1);
+        expect(reviewSnapshot[0].data()!.review).toBe('Great place!');
+        expect(reviewSnapshot[0].data()!.rating).toBe(5);
+    });
 });
