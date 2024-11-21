@@ -1,5 +1,6 @@
 import MockedDocumentReference from "./mockedDocumentReference";
 import MockedDocumentSnapshot from "./mockedDocumentSnapshot";
+import MockedQuerySnapshot from "./mockedQuerySnapshot";
 
 export default class MockedCollection {
     private _documents: Map<string, MockedDocumentSnapshot> = new Map();
@@ -43,7 +44,7 @@ export default class MockedCollection {
     }
 
     // Méthode pour appliquer les filtres et renvoyer les documents
-    get(): MockedDocumentSnapshot[] {
+    get(): MockedQuerySnapshot {
         let docs = Array.from(this._documents.values());
 
         // Appliquer tous les filtres
@@ -68,7 +69,8 @@ export default class MockedCollection {
             docs = docs.slice(0, this.limitCount);
         }
 
-        return docs;
+        // Return a MockedQuerySnapshot instead of just docs
+        return new MockedQuerySnapshot(docs);
     }
 
     where(field: string, operator: string, value: any): this {

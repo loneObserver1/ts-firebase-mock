@@ -1,10 +1,10 @@
 export default class MockedDocumentSnapshot {
-    private docId: string;
+    public id: string;
     private _data: Record<string, any> | null;
     private existsFlag: boolean;
 
     constructor(docId: string, data: Record<string, any> | null) {
-        this.docId = docId;
+        this.id = docId;
         this._data = data;
         this.existsFlag = data !== null;
     }
@@ -22,6 +22,6 @@ export default class MockedDocumentSnapshot {
         if (this.existsFlag && this._data) {
             return this._data[field];
         }
-        throw new Error(`Field '${field}' does not exist in document '${this.docId}'`);
+        throw new Error(`Field '${field}' does not exist in document '${this.id}'`);
     }
 }

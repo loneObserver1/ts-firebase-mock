@@ -1,4 +1,6 @@
+import MockedDocumentSnapshot from "../firestore/mockedDocumentSnapshot";
 import MockedFirestore from "../firestore/mockedFirestore";
+import MockedQuerySnapshot from "../firestore/mockedQuerySnapshot";
 
 describe('Firestore Mock Tests', () => {
     let firestore: MockedFirestore;
@@ -38,7 +40,7 @@ describe('Firestore Mock Tests', () => {
         usersCollection.doc(newUser.id).delete();
 
         const allUsers = usersCollection.get();
-        expect(allUsers.length).toBe(0);
+        expect(allUsers.size).toBe(0);
     });
 
     test('should filter documents using where', () => {
@@ -49,8 +51,8 @@ describe('Firestore Mock Tests', () => {
 
         const usersAbove30 = usersCollection.where('age', '>', 30).get();
 
-        expect(usersAbove30.length).toBe(1);
-        expect(usersAbove30[0].data()).toEqual({ name: 'Charlie', age: 35 });
+        expect(usersAbove30.size).toBe(1);
+        expect(usersAbove30.docs[0].data()).toEqual({ name: 'Charlie', age: 35 });
     });
 
     test('should filter documents using multiple where clauses', () => {
@@ -64,8 +66,8 @@ describe('Firestore Mock Tests', () => {
             .where('age', '<=', 35)
             .get();
 
-        expect(usersBetween25and35.length).toBe(3);
-        expect(usersBetween25and35.map(doc => doc.data()!.name)).toEqual(['Alice', 'Bob', 'Charlie']);
+        expect(usersBetween25and35.size).toBe(3);
+        expect(usersBetween25and35.docs.map(doc => doc.data()!.name)).toEqual(['Alice', 'Bob', 'Charlie']);
     });
 
     test('should return empty array if no documents match where filter', () => {
@@ -75,7 +77,7 @@ describe('Firestore Mock Tests', () => {
 
         const noUserAbove40 = usersCollection.where('age', '>', 40).get();
 
-        expect(noUserAbove40.length).toBe(0);
+        expect(noUserAbove40.size).toBe(0);
     });
 
 
@@ -98,8 +100,8 @@ describe('Firestore Mock Tests', () => {
         // Delete one document and check the length
         usersCollection.doc(user2.id).delete();
         const allUsers = usersCollection.get();
-        expect(allUsers.length).toBe(1);
-        expect(allUsers[0].data()).toEqual({ name: 'Alice', age: 31 });
+        expect(allUsers.size).toBe(1);
+        expect(allUsers.docs[0].data()).toEqual({ name: 'Alice', age: 31 });
     });
 
     test('should retrieve specific field from document', () => {
@@ -120,9 +122,9 @@ describe('Firestore Mock Tests', () => {
 
         const orderedUsers = usersCollection.orderBy('age', 'asc').get();
 
-        expect(orderedUsers[0].data()!.age).toBe(25);
-        expect(orderedUsers[1].data()!.age).toBe(30);
-        expect(orderedUsers[2].data()!.age).toBe(35);
+        expect(orderedUsers.docs[0].data()!.age).toBe(25);
+        expect(orderedUsers.docs[1].data()!.age).toBe(30);
+        expect(orderedUsers.docs[2].data()!.age).toBe(35);
     });
 
     test('should order documents by field in descending order', () => {
@@ -133,9 +135,9 @@ describe('Firestore Mock Tests', () => {
 
         const orderedUsers = usersCollection.orderBy('age', 'desc').get();
 
-        expect(orderedUsers[0].data()!.age).toBe(35);
-        expect(orderedUsers[1].data()!.age).toBe(30);
-        expect(orderedUsers[2].data()!.age).toBe(25);
+        expect(orderedUsers.docs[0].data()!.age).toBe(35);
+        expect(orderedUsers.docs[1].data()!.age).toBe(30);
+        expect(orderedUsers.docs[2].data()!.age).toBe(25);
     });
 
     test('should limit the number of returned documents', () => {
@@ -146,9 +148,9 @@ describe('Firestore Mock Tests', () => {
 
         const limitedUsers = usersCollection.limit(2).get();
 
-        expect(limitedUsers.length).toBe(2);
-        expect(limitedUsers[0].data()!.name).toBe('Alice');
-        expect(limitedUsers[1].data()!.name).toBe('Bob');
+        expect(limitedUsers.size).toBe(2);
+        expect(limitedUsers.docs[0].data()!.name).toBe('Alice');
+        expect(limitedUsers.docs[1].data()!.name).toBe('Bob');
     });
 
     it('should allow creating a document with subcollections', () => {
@@ -195,8 +197,48 @@ describe('Firestore Mock Tests', () => {
 
         const reviewSnapshot = reviewsCollection.get();
 
-        expect(reviewSnapshot.length).toBe(1);
-        expect(reviewSnapshot[0].data()!.review).toBe('Great place!');
-        expect(reviewSnapshot[0].data()!.rating).toBe(5);
+        expect(reviewSnapshot.size).toBe(1);
+        expect(reviewSnapshot.docs[0].data()!.review).toBe('Great place!');
+        expect(reviewSnapshot.docs[0].data()!.rating).toBe(5);
     });
+
+    test('should return the correct size of documents in the query snapshot', () => {
+        const docs = [
+            new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+        ];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        expect(querySnapshot.size).toBe(2);
+    });
+
+    test('should return empty as true if there are no documents', () => {
+        const querySnapshot = new MockedQuerySnapshot([]);
+
+        expect(querySnapshot.empty).toBe(true);
+    });
+
+    test('should return empty as false if there are documents', () => {
+        const docs = [new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 })];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        expect(querySnapshot.empty).toBe(false);
+    });
+
+    test('should iterate over all documents using forEach', () => {
+        const docs = [
+            new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+        ];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        const result: string[] = [];
+        querySnapshot.forEach(doc => {
+            result.push(doc.id);
+        });
+
+        expect(result).toEqual(['doc1', 'doc2']);
+    });
+
+
 });
