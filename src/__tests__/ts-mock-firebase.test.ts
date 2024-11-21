@@ -225,7 +225,7 @@ describe('Firestore Mock Tests', () => {
         expect(querySnapshot.docs[0].get('name')).toBe('Alice');
         expect(querySnapshot.docs[0].get('city')).toBe(null);
         expect(querySnapshot.docs[2].get('region')).toBe(null);
-        expect(querySnapshot.docs[2].data()).toBe({});
+        expect(querySnapshot.docs[3].data()).toBe({});
     });
 
     test('should return the correct data of documents using get() field in the query snapshot', () => {
