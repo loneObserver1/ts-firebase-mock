@@ -10,7 +10,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest src/__tests__",
     "prepare": "npm run build & npm version patch",
     "publish": "npm publish"
   },
