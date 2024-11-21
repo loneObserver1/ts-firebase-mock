@@ -1,17 +1,18 @@
 {
   "name": "ts-firebase-mock",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loneObserver1/ts-mock-firebase.git"
+    "url": "git+https://github.com/loneObserver1/ts-firebase-mock.git"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "test": "jest",
-    "publish": "npm run build & npm version patch & npm publish"
+    "prepare": "npm run build & npm version patch",
+    "publish": "npm publish"
   },
   "keywords": [
     "firebase-mock",

@@ -1,8 +1,8 @@
-# ts-mock-firebase
+# ts-firebase-mock
 
-[![Node.js CI](https://github.com/loneObserver1/ts-mock-firebase/actions/workflows/nodejs.yml/badge.svg)](https://github.com/loneObserver1/ts-mock-firebase/actions/workflows/nodejs.yml)
+[![Node.js CI](https://github.com/loneObserver1/ts-firebase-mock/actions/workflows/nodejs.yml/badge.svg)](https://github.com/loneObserver1/ts-firebase-mock/actions/workflows/nodejs.yml)
 
-`ts-mock-firebase` is a TypeScript library designed to simulate Firestore (a NoSQL cloud database from Firebase) for testing purposes. This package mimics Firestore's core functionality, allowing developers to write unit tests without requiring a real Firestore instance. It operates entirely in-memory, providing a lightweight solution for testing Firestore interactions locally.
+`ts-firebase-mock` is a TypeScript library designed to simulate Firestore (a NoSQL cloud database from Firebase) for testing purposes. This package mimics Firestore's core functionality, allowing developers to write unit tests without requiring a real Firestore instance. It operates entirely in-memory, providing a lightweight solution for testing Firestore interactions locally.
 
 ## Table of Contents
 
@@ -28,18 +28,18 @@
 
 ## Installation
 
-You can install `ts-mock-firebase` via npm or yarn.
+You can install `ts-firebase-mock` via npm or yarn.
 
 ```bash
-npm install ts-mock-firebase
+npm install ts-firebase-mock
 or
-yarn add ts-mock-firebase
+yarn add ts-firebase-mock
 ```
 ## Usage
 ### Creating a Firebase Mock Instance
 To create a mock Firestore instance, simply instantiate the FirestoreMock class. This will simulate Firestore's collection and document behavior.
 ```typescript
-import { MockedFirebase } from 'ts-mock-firebase';
+import { MockedFirebase } from 'ts-firebase-mock';
 
 // Create associate mocked
 const firebase = new MockedFirebase();
@@ -179,9 +179,9 @@ Represents a mocked firestore.
 - `flush(): void` - Flush all datas in mocked firestore
 
 ### Example
-Here’s a complete example showing how you can use ts-mock-firebase to add, retrieve, and update documents:
+Here’s a complete example showing how you can use ts-firebase-mock to add, retrieve, and update documents:
 ```typescript
-import { MockedFirebase } from 'ts-mock-firebase';
+import { MockedFirebase } from 'ts-firebase-mock';
 
 // Create associate mocked
 const firebase = new MockedFirebase();
