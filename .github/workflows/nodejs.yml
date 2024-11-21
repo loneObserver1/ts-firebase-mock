@@ -31,6 +31,9 @@ jobs:
       - name: Build package
         run: npm run build  # Commande pour construire le package
 
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+
   publish:
     needs: build  # Ce job dépend du job `build` et ne s'exécutera qu'après sa réussite
     runs-on: ubuntu-latest
