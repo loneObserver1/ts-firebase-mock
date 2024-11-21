@@ -1,10 +1,11 @@
 import MockedDocumentSnapshot from "./mockedDocumentSnapshot";
+import MockedQueryDocumentSnapshot from "./mockedQueryDocumentSnapshot";
 
 export default class MockedQuerySnapshot {
-    public docs: MockedDocumentSnapshot[];
+    public docs: MockedQueryDocumentSnapshot[];
     public empty: boolean;
 
-    constructor(documents: MockedDocumentSnapshot[]) {
+    constructor(documents: MockedQueryDocumentSnapshot[]) {
         this.docs = documents;
         this.empty = this.docs.length == 0;
     }
@@ -14,7 +15,7 @@ export default class MockedQuerySnapshot {
     }
 
     // Implement the forEach method
-    forEach(callback: (doc: MockedDocumentSnapshot) => void): void {
+    forEach(callback: (doc: MockedQueryDocumentSnapshot) => void): void {
         this.docs.forEach(doc => callback(doc));
     }
 }

@@ -1,6 +1,6 @@
 export default class MockedDocumentSnapshot {
     public id: string;
-    private _data: Record<string, any> | null;
+    protected _data: Record<string, any> | null;
     private existsFlag: boolean;
 
     constructor(docId: string, data: Record<string, any> | null) {

@@ -1,5 +1,6 @@
 import MockedDocumentReference from "./mockedDocumentReference";
 import MockedDocumentSnapshot from "./mockedDocumentSnapshot";
+import MockedQueryDocumentSnapshot from "./mockedQueryDocumentSnapshot";
 import MockedQuerySnapshot from "./mockedQuerySnapshot";
 
 export default class MockedCollection {
@@ -69,8 +70,11 @@ export default class MockedCollection {
             docs = docs.slice(0, this.limitCount);
         }
 
-        // Return a MockedQuerySnapshot instead of just docs
-        return new MockedQuerySnapshot(docs);
+        // Convertir chaque MockedDocumentSnapshot en MockedQueryDocumentSnapshot
+        const queryDocs = docs.map(doc => new MockedQueryDocumentSnapshot(doc.id, doc.data()));
+
+        // Retourner un MockedQuerySnapshot contenant des MockedQueryDocumentSnapshot
+        return new MockedQuerySnapshot(queryDocs);
     }
 
     where(field: string, operator: string, value: any): this {

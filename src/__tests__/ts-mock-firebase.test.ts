@@ -1,5 +1,6 @@
 import MockedDocumentSnapshot from "../firestore/mockedDocumentSnapshot";
 import MockedFirestore from "../firestore/mockedFirestore";
+import MockedQueryDocumentSnapshot from "../firestore/mockedQueryDocumentSnapshot";
 import MockedQuerySnapshot from "../firestore/mockedQuerySnapshot";
 
 describe('Firestore Mock Tests', () => {
@@ -202,10 +203,46 @@ describe('Firestore Mock Tests', () => {
         expect(reviewSnapshot.docs[0].data()!.rating).toBe(5);
     });
 
+    test('should return the correct data of documents in the query snapshot', () => {
+        const docs = [
+            new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedQueryDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+        ];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        expect(querySnapshot.docs[0].data().name).toBe('Alice');
+        expect(querySnapshot.docs[1].data().age).toBe(25);
+    });
+
+    test('should return the correct data of documents using get() field in the query snapshot', () => {
+        const docs = [
+            new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedQueryDocumentSnapshot('doc2', { name: 'Bob', age: 25 }),
+            new MockedQueryDocumentSnapshot('doc3', null)
+        ];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        expect(querySnapshot.docs[0].get('name')).toBe('Alice');
+        expect(querySnapshot.docs[0].get('city')).toBe(null);
+        expect(querySnapshot.docs[2].get('region')).toBe(null);
+        expect(querySnapshot.docs[2].data()).toBe({});
+    });
+
+    test('should return the correct data of documents using get() field in the query snapshot', () => {
+        const docs = [
+            new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedQueryDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+        ];
+        const querySnapshot = new MockedQuerySnapshot(docs);
+
+        expect(querySnapshot.docs[0].get('name')).toBe('Alice');
+        expect(querySnapshot.docs[0].get('city')).toBe(null);
+    });
+
     test('should return the correct size of documents in the query snapshot', () => {
         const docs = [
-            new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
-            new MockedDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+            new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedQueryDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
         ];
         const querySnapshot = new MockedQuerySnapshot(docs);
 
@@ -219,7 +256,7 @@ describe('Firestore Mock Tests', () => {
     });
 
     test('should return empty as false if there are documents', () => {
-        const docs = [new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 })];
+        const docs = [new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 })];
         const querySnapshot = new MockedQuerySnapshot(docs);
 
         expect(querySnapshot.empty).toBe(false);
@@ -227,10 +264,11 @@ describe('Firestore Mock Tests', () => {
 
     test('should iterate over all documents using forEach', () => {
         const docs = [
-            new MockedDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
-            new MockedDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
+            new MockedQueryDocumentSnapshot('doc1', { name: 'Alice', age: 30 }),
+            new MockedQueryDocumentSnapshot('doc2', { name: 'Bob', age: 25 })
         ];
         const querySnapshot = new MockedQuerySnapshot(docs);
+
 
         const result: string[] = [];
         querySnapshot.forEach(doc => {
