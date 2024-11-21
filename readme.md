@@ -61,6 +61,10 @@ const userDocRef = usersCollection.doc('user1');
 // Adding a document to a subcollection under the 'user1' document
 const addressesCollection = userDocRef.collection('addresses');
 addressesCollection.add({ city: 'Paris', zip: '75000' });
+
+// Also subcollections
+const reviewsCollection = addressesCollection.doc('address1').collection('reviews');
+reviewsCollection.add({ review: 'Great place!', rating: 5 });
 ```
 
 ## Retrieving Documents
