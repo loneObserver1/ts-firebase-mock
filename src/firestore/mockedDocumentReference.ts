@@ -98,9 +98,4 @@ export default class MockedDocumentReference {
         }
         return this.subcollections.get(collectionPath)!;
     }
-
-    // Ajoutez une méthode pour récupérer toutes les sous-collections
-    getSubcollections(): Map<string, MockedCollection> {
-        return this.subcollections;
-    }
 }
