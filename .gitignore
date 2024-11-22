@@ -4,3 +4,4 @@ node_modules
 package-lock.json
 new_version.sh
 coverage
+.vscode/launch.json
