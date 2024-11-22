@@ -278,5 +278,20 @@ describe('Firestore Mock Tests', () => {
         expect(result).toEqual(['doc1', 'doc2']);
     });
 
+    test('should flush firestore and empty the collection', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+        usersCollection.add({ name: 'Bob', age: 25 });
 
+        // Vérification avant flush
+        const usersBeforeFlush = usersCollection.get();
+        expect(usersBeforeFlush.size).toBe(2);
+
+        // Appel de flush pour vider la base de données mockée
+        firestore.flush();
+
+        // Vérification après flush, la collection doit être vide
+        const usersAfterFlush = usersCollection.get();
+        expect(usersAfterFlush.size).toBe(0);
+    });
 });

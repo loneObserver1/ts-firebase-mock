@@ -11,6 +11,11 @@ export default class MockedFirestore {
     }
 
     flush(): void {
-        this.collections = new Map();
+        // Réinitialise toutes les collections
+        this.collections.forEach((collection) => {
+            collection.clear();
+        });
+        // Vide la map des collections
+        this.collections.clear();
     }
 }
