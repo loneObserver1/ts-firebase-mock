@@ -1,4 +1,3 @@
-import MockedDocumentSnapshot from "./mockedDocumentSnapshot";
 import MockedQueryDocumentSnapshot from "./mockedQueryDocumentSnapshot";
 
 export default class MockedQuerySnapshot {
