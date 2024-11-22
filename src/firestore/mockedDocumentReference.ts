@@ -3,7 +3,7 @@ import MockedDocumentSnapshot from "./mockedDocumentSnapshot";
 
 export default class MockedDocumentReference {
     private _id: string;
-    private _collection: MockedCollection;
+    public _collection: MockedCollection;
     private snapshotListeners: Function[] = [];
 
     private subcollections: Map<string, MockedCollection> = new Map();
@@ -90,10 +90,17 @@ export default class MockedDocumentReference {
         return doc ? doc.exists() : false;
     }
 
-    collection(name: string): MockedCollection {
-        if (!this.subcollections.has(name)) {
-            this.subcollections.set(name, new MockedCollection(name));
+    // Modifiez la méthode collection
+    collection(collectionPath: string): MockedCollection {
+        if (!this.subcollections.has(collectionPath)) {
+            const newCollection = new MockedCollection(collectionPath);
+            this.subcollections.set(collectionPath, newCollection);
         }
-        return this.subcollections.get(name)!;
+        return this.subcollections.get(collectionPath)!;
+    }
+
+    // Ajoutez une méthode pour récupérer toutes les sous-collections
+    getSubcollections(): Map<string, MockedCollection> {
+        return this.subcollections;
     }
 }

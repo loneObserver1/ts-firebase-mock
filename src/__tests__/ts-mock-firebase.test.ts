@@ -273,4 +273,40 @@ describe('Firestore Mock Tests', () => {
 
         expect(result).toEqual(['doc1', 'doc2']);
     });
+
+    it('should fetch a reduction by name', async () => {
+        // Définition des valeurs à rechercher
+        const mockEventId = 'event1';
+        const mockReductionName = 'reduction50';
+
+        // Initialisation des données pour ce test
+        const eventsCollection = firestore.collection('events');
+
+        // Création de l'événement
+        await eventsCollection.doc(mockEventId).set({
+            uid: mockEventId,
+            statusEvent: 'end',
+            billingUrl: null,
+            billingDate: new Date('2023-01-01')
+        });
+
+        // Ajout de la réduction dans la sous-collection 'coupons'
+        await eventsCollection.doc(mockEventId).collection('coupons').doc('coupon1').set({
+            name: mockReductionName,
+            discount: 50
+        });
+
+        // Appel à la fonction qui va récupérer la réduction
+        const result = await firestore.collection('events')
+            .doc(mockEventId)
+            .collection('coupons')
+            .where('name', '==', mockReductionName)
+            .limit(1)
+            .get();
+
+        // Vérification des résultats
+        expect(result.docs.length).toBe(1); // Au moins une réduction doit être trouvée
+        expect(result.docs[0].data().name).toBe(mockReductionName); // Vérification du nom de la réduction
+    });
+
 });

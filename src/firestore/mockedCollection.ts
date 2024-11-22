@@ -5,6 +5,8 @@ import MockedQuerySnapshot from "./mockedQuerySnapshot";
 
 export default class MockedCollection {
     private _documents: Map<string, MockedDocumentSnapshot> = new Map();
+    private _documentsReferences: Map<string, MockedDocumentReference> = new Map();
+
     private name: string;
     private filters: Array<(doc: MockedDocumentSnapshot) => boolean> = [];
 
@@ -31,10 +33,20 @@ export default class MockedCollection {
         if (!docId) {
             docId = this.generateId();
         }
-        if (!this._documents.has(docId)) {
-            this._documents.set(docId, new MockedDocumentSnapshot(docId, {}));
+
+        // Si le document existe déjà, retournez la référence existante
+        if (this._documentsReferences.has(docId)) {
+            return this._documentsReferences.get(docId)!;
         }
-        return new MockedDocumentReference(docId, this);
+
+        // Sinon, créez un nouveau document avec des données vides
+        const newDocSnapshot = new MockedDocumentSnapshot(docId, {});
+        this._documents.set(docId, newDocSnapshot);
+
+        const newDocReference = new MockedDocumentReference(docId, this);
+        this._documentsReferences.set(docId, newDocReference);
+
+        return newDocReference;
     }
 
     add(data: Record<string, any>): MockedDocumentReference {
@@ -48,32 +60,26 @@ export default class MockedCollection {
     get(): MockedQuerySnapshot {
         let docs = Array.from(this._documents.values());
 
-        // Appliquer tous les filtres
+        // Reste de votre logique existante de filtrage, tri, etc.
         if (this.filters.length > 0) {
             docs = docs.filter(doc => this.filters.every(filter => filter(doc)));
         }
 
-        // Appliquer l'ordre de tri (si défini)
         if (this.orderByField) {
             docs = docs.sort((a, b) => {
                 const aValue = a.data()?.[this.orderByField!];
                 const bValue = b.data()?.[this.orderByField!];
-                if (this.orderByDirection === 'asc') {
-                    return aValue > bValue ? 1 : -1;
-                }
-                return aValue < bValue ? 1 : -1;
+                return this.orderByDirection === 'asc'
+                    ? (aValue > bValue ? 1 : -1)
+                    : (aValue < bValue ? 1 : -1);
             });
         }
 
-        // Appliquer la limite (si définie)
         if (this.limitCount !== null) {
             docs = docs.slice(0, this.limitCount);
         }
 
-        // Convertir chaque MockedDocumentSnapshot en MockedQueryDocumentSnapshot
         const queryDocs = docs.map(doc => new MockedQueryDocumentSnapshot(doc.id, doc.data()));
-
-        // Retourner un MockedQuerySnapshot contenant des MockedQueryDocumentSnapshot
         return new MockedQuerySnapshot(queryDocs);
     }
 
