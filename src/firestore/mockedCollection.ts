@@ -109,9 +109,4 @@ export default class MockedCollection {
     get documents(): Map<string, MockedDocumentSnapshot> {
         return this._documents;
     }
-
-    // Méthode pour vider la collection
-    clear() {
-        this.documents.clear();
-    }
 }

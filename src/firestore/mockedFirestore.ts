@@ -9,13 +9,4 @@ export default class MockedFirestore {
         }
         return this.collections.get(collectionPath)!;
     }
-
-    flush(): void {
-        // Réinitialise toutes les collections
-        this.collections.forEach((collection) => {
-            collection.clear();
-        });
-        // Vide la map des collections
-        this.collections.clear();
-    }
 }
