@@ -10,10 +10,6 @@ describe('Firestore Mock Tests', () => {
         firestore = new MockedFirestore();
     });
 
-    afterEach(() => {
-        firestore.flush();
-    })
-
     test('should create and retrieve documents', () => {
         const usersCollection = firestore.collection('users');
         const newUser = usersCollection.add({ name: 'Alice', age: 30 });
