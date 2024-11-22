@@ -99,6 +99,18 @@ export default class MockedCollection {
                     return docFieldValue >= value;
                 case '<=':
                     return docFieldValue <= value;
+                case '!=':
+                    return docFieldValue !== value;
+                case 'in':
+                    if (!Array.isArray(value)) {
+                        throw new Error(`Value for "in" operator must be an array`);
+                    }
+                    return value.includes(docFieldValue);
+                case 'not-in':
+                    if (!Array.isArray(value)) {
+                        throw new Error(`Value for "not-in" operator must be an array`);
+                    }
+                    return !value.includes(docFieldValue);
                 default:
                     throw new Error(`Operator ${operator} not supported`);
             }

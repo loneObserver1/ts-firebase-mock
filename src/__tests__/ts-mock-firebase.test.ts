@@ -265,7 +265,6 @@ describe('Firestore Mock Tests', () => {
         ];
         const querySnapshot = new MockedQuerySnapshot(docs);
 
-
         const result: string[] = [];
         querySnapshot.forEach(doc => {
             result.push(doc.id);
@@ -274,7 +273,7 @@ describe('Firestore Mock Tests', () => {
         expect(result).toEqual(['doc1', 'doc2']);
     });
 
-    it('should fetch a reduction by name', async () => {
+    test('should return document in subcollection using document reference', async () => {
         // Définition des valeurs à rechercher
         const mockEventId = 'event1';
         const mockReductionName = 'reduction50';
@@ -297,7 +296,7 @@ describe('Firestore Mock Tests', () => {
         });
 
         // Appel à la fonction qui va récupérer la réduction
-        const result = await firestore.collection('events')
+        const querySnapshot = await firestore.collection('events')
             .doc(mockEventId)
             .collection('coupons')
             .where('name', '==', mockReductionName)
@@ -305,8 +304,78 @@ describe('Firestore Mock Tests', () => {
             .get();
 
         // Vérification des résultats
-        expect(result.docs.length).toBe(1); // Au moins une réduction doit être trouvée
-        expect(result.docs[0].data().name).toBe(mockReductionName); // Vérification du nom de la réduction
+        expect(querySnapshot.docs.length).toBe(1); // Au moins une réduction doit être trouvée
+        expect(querySnapshot.docs[0].data().name).toBe(mockReductionName); // Vérification du nom de la réduction
     });
 
+    test('should filter documents using != operator', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+        usersCollection.add({ name: 'Bob', age: 25 });
+        usersCollection.add({ name: 'Charlie', age: 35 });
+
+        const not30YearsOld = usersCollection.where('age', '!=', 30).get();
+
+        expect(not30YearsOld.size).toBe(2);
+        expect(not30YearsOld.docs.map(doc => doc.data()!.name)).toEqual(['Bob', 'Charlie']);
+    });
+
+    test('should filter documents using in operator', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+        usersCollection.add({ name: 'Bob', age: 25 });
+        usersCollection.add({ name: 'Charlie', age: 35 });
+
+        const agesIn = usersCollection.where('age', 'in', [25, 35]).get();
+
+        expect(agesIn.size).toBe(2);
+        expect(agesIn.docs.map(doc => doc.data()!.name)).toEqual(['Bob', 'Charlie']);
+    });
+
+    test('should filter documents using not-in operator', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+        usersCollection.add({ name: 'Bob', age: 25 });
+        usersCollection.add({ name: 'Charlie', age: 35 });
+
+        const agesNotIn = usersCollection.where('age', 'not-in', [30, 35]).get();
+
+        expect(agesNotIn.size).toBe(1);
+        expect(agesNotIn.docs.map(doc => doc.data()!.name)).toEqual(['Bob']);
+    });
+
+    test('should throw error when using in operator with non-array value', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+
+        expect(() => {
+            usersCollection.where('age', 'in', 30).get(); // Value is not an array
+        }).toThrow('Value for "in" operator must be an array');
+    });
+
+    test('should throw error when using not-in operator with non-array value', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+
+        expect(() => {
+            usersCollection.where('age', 'not-in', 30).get(); // Value is not an array
+        }).toThrow('Value for "not-in" operator must be an array');
+    });
+
+    test('should work with multiple where clauses including !=, in, and not-in', () => {
+        const usersCollection = firestore.collection('users');
+        usersCollection.add({ name: 'Alice', age: 30 });
+        usersCollection.add({ name: 'Bob', age: 25 });
+        usersCollection.add({ name: 'Charlie', age: 35 });
+        usersCollection.add({ name: 'Diana', age: 40 });
+
+        const complexQuery = usersCollection
+            .where('age', '!=', 30)
+            .where('age', 'in', [25, 35, 40])
+            .where('age', 'not-in', [35])
+            .get();
+
+        expect(complexQuery.size).toBe(2);
+        expect(complexQuery.docs.map(doc => doc.data()!.name)).toEqual(['Bob', 'Diana']);
+    });
 });

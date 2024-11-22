@@ -140,10 +140,23 @@ console.log(users);  // Output: [MockedDocumentSnapshot, MockedDocumentSnapshot]
 ```
 
 ## Filtering with where
-You can filter documents using the where method, which allows you to specify field values, operators, and the value to filter by. It supports operators like ==, >, <, >=, and <=.
+You can filter documents using the where method, which allows you to specify field values, operators, and the value to filter by. It supports operators like ==, >, <, >=, <=, !=, in, and not-in.
 ```typescript
 const filteredUsers = usersCollection.where('age', '>', 30).get();
 console.log(filteredUsers.length);  // Output: 1 (users with age > 30)
+
+// Example: Users not aged 30
+const not30YearsOld = usersCollection.where('age', '!=', 30).get();
+console.log(not30YearsOld.size);  // Output: 2
+
+// Example: Users aged 25 or 35
+const agesIn = usersCollection.where('age', 'in', [25, 35]).get();
+console.log(agesIn.size);  // Output: 2
+
+// Example: Users not aged 30 or 35
+const agesNotIn = usersCollection.where('age', 'not-in', [30, 35]).get();
+console.log(agesNotIn.size);  // Output: 1
+
 ```
 
 ## Sorting with orderBy
