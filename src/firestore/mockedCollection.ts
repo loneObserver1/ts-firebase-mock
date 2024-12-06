@@ -40,7 +40,7 @@ export default class MockedCollection {
         }
 
         // Sinon, créez un nouveau document avec des données vides
-        const newDocSnapshot = new MockedDocumentSnapshot(docId, {});
+        const newDocSnapshot = new MockedDocumentSnapshot(docId, null);
         this._documents.set(docId, newDocSnapshot);
 
         const newDocReference = new MockedDocumentReference(docId, this);

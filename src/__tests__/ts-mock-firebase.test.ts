@@ -111,6 +111,14 @@ describe('Firestore Mock Tests', () => {
         expect(userSnapshot.get('age')).toBe(30);
     });
 
+    test('should not retrieve document not exist', () => {
+        const usersCollection = firestore.collection('users');
+
+        const userSnapshot = usersCollection.doc('user123').get();
+        expect(userSnapshot.exists()).toBe(false);
+        expect(userSnapshot.data()).toBe(null);
+    });
+
     test('should order documents by field in ascending order', () => {
         const usersCollection = firestore.collection('users');
         usersCollection.add({ name: 'Alice', age: 30 });
