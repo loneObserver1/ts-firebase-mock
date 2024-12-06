@@ -6,7 +6,7 @@ export default class MockedDocumentSnapshot {
     constructor(docId: string, data: Record<string, any> | null) {
         this.id = docId;
         this._data = data;
-        this.existsFlag = (data && Object.keys(data).length > 0) ?? false;
+        this.existsFlag = data !== null && Object.keys(data).length > 0;
     }
 
     get exists(): boolean {

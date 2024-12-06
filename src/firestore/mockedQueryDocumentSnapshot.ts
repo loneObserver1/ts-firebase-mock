@@ -6,7 +6,7 @@ export default class MockedQueryDocumentSnapshot {
     constructor(docId: string, data: Record<string, any> | null) {
         this.id = docId;
         this._data = data;
-        this.exists = data !== null;
+        this.exists = data !== null && Object.keys(data).length > 0;
     }
 
     get(key: string): any | null {
