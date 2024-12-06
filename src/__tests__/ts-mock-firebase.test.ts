@@ -117,6 +117,10 @@ describe('Firestore Mock Tests', () => {
         const userSnapshot = usersCollection.doc('user123').get();
         expect(userSnapshot.exists()).toBe(false);
         expect(userSnapshot.data()).toBe(null);
+
+        const userSnapshot2 = firestore.collection('products').doc('product_123').get();
+        expect(userSnapshot2.exists()).toBe(false);
+        expect(userSnapshot2.data()).toBe(null);
     });
 
     test('should order documents by field in ascending order', () => {
