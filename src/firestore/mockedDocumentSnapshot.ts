@@ -1,20 +1,20 @@
 export default class MockedDocumentSnapshot {
     public id: string;
-    protected _data: Record<string, any> | null;
+    protected _data: Record<string, any> | null = null;
     private existsFlag: boolean;
 
     constructor(docId: string, data: Record<string, any> | null) {
         this.id = docId;
         this._data = data;
-        this.existsFlag = data !== null && Object.keys(data).length > 0;
+        this.existsFlag = (data && Object.keys(data).length > 0) ?? false;
     }
 
-    exists(): boolean {
+    get exists(): boolean {
         return this.existsFlag;
     }
 
     data(): Record<string, any> | null {
-        return this.exists() ? this._data : null;
+        return this.exists ? this._data : null;
     }
 
     // Récupérer un champ spécifique

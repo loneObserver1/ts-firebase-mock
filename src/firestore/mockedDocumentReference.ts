@@ -87,7 +87,7 @@ export default class MockedDocumentReference {
     // Check if document exists
     exists(): boolean {
         const doc = this._collection.documents.get(this._id);
-        return doc ? doc.exists() : false;
+        return doc ? doc.exists : false;
     }
 
     // Modifiez la méthode collection

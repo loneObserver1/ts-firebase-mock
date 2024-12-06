@@ -106,7 +106,7 @@ describe('Firestore Mock Tests', () => {
         const userRef = usersCollection.add({ name: 'Alice', age: 30 });
 
         const userSnapshot = usersCollection.doc(userRef.id).get();
-        expect(userSnapshot.exists()).toBe(true);
+        expect(userSnapshot.exists).toBe(true);
         expect(userSnapshot.get('name')).toBe('Alice');
         expect(userSnapshot.get('age')).toBe(30);
     });
@@ -115,11 +115,11 @@ describe('Firestore Mock Tests', () => {
         const usersCollection = firestore.collection('users');
 
         const userSnapshot = usersCollection.doc('user123').get();
-        expect(userSnapshot.exists()).toBe(false);
+        expect(userSnapshot.exists).toBe(false);
         expect(userSnapshot.data()).toBe(null);
 
         const userSnapshot2 = firestore.collection('products').doc('product_123').get();
-        expect(userSnapshot2.exists()).toBe(false);
+        expect(userSnapshot2.exists).toBe(false);
         expect(userSnapshot2.data()).toBe(null);
     });
 
